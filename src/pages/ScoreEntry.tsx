@@ -47,8 +47,8 @@ export default function ScoreEntry() {
   useEffect(() => {
     if (!teamAIds || !teamBIds) { navigate('/new-match'); return; }
     Promise.all([
-      ...teamAIds.map((id) => api.get<Player>(`/players/${id}`).then((r) => r.data.player ?? r.data)),
-      ...teamBIds.map((id) => api.get<Player>(`/players/${id}`).then((r) => r.data.player ?? r.data)),
+      ...teamAIds.map((id) => api.get(`/players/${id}`).then((r) => (r.data.player ?? r.data) as Player)),
+      ...teamBIds.map((id) => api.get(`/players/${id}`).then((r) => (r.data.player ?? r.data) as Player)),
     ]).then(([a1, a2, b1, b2]) => {
       setTeamAPlayers([a1, a2]);
       setTeamBPlayers([b1, b2]);
