@@ -46,15 +46,8 @@ export default function NewMatch() {
     e.preventDefault();
     setError('');
     const allPlayers = [teamA[0], teamA[1], teamB[0], teamB[1]];
-    if (allPlayers.some((p) => !p)) {
-      setError('Sélectionnez 4 joueurs');
-      return;
-    }
-    const unique = new Set(allPlayers);
-    if (unique.size !== 4) {
-      setError('Les joueurs doivent être différents');
-      return;
-    }
+    if (allPlayers.some((p) => !p)) { setError('Sélectionnez 4 joueurs'); return; }
+    if (new Set(allPlayers).size !== 4) { setError('Les joueurs doivent être différents'); return; }
     try {
       await api.post('/matches', { teamA, teamB, scores: sets, winner });
       navigate('/');
@@ -100,48 +93,46 @@ export default function NewMatch() {
           </div>
         </div>
 
-        <div className="guest-section">
-          <input
-            placeholder="Ajouter un invité..."
-            value={guestName}
-            onChange={(e) => setGuestName(e.target.value)}
-          />
-          <button type="button" onClick={addGuest}>+ Invité</button>
+        <div className="form-section">
+          <h3>Ajouter un joueur invité</h3>
+          <div className="guest-section">
+            <input
+              placeholder="Nom du joueur invité..."
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addGuest())}
+            />
+            <button type="button" onClick={addGuest}>+ Ajouter</button>
+          </div>
         </div>
 
-        <div className="sets-section">
-          <h3>Sets</h3>
+        <div className="form-section">
+          <h3>Scores par set</h3>
           {sets.map((s, i) => (
             <div key={i} className="set-row">
-              <span>Set {i + 1}</span>
-              <input
-                type="number" min={0} max={7} value={s.teamA_Score}
-                onChange={(e) => updateSet(i, 'teamA_Score', +e.target.value)}
-              />
-              <span>—</span>
-              <input
-                type="number" min={0} max={7} value={s.teamB_Score}
-                onChange={(e) => updateSet(i, 'teamB_Score', +e.target.value)}
-              />
+              <span className="set-label">Set {i + 1}</span>
+              <input type="number" min={0} max={7} value={s.teamA_Score}
+                onChange={(e) => updateSet(i, 'teamA_Score', +e.target.value)} />
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>—</span>
+              <input type="number" min={0} max={7} value={s.teamB_Score}
+                onChange={(e) => updateSet(i, 'teamB_Score', +e.target.value)} />
               <label>
-                <input
-                  type="checkbox" checked={!s.isComplete}
-                  onChange={(e) => updateSet(i, 'isComplete', !e.target.checked)}
-                />
+                <input type="checkbox" checked={!s.isComplete}
+                  onChange={(e) => updateSet(i, 'isComplete', !e.target.checked)} />
                 Interrompu
               </label>
               {sets.length > 1 && (
-                <button type="button" onClick={() => removeSet(i)}>✕</button>
+                <button type="button" onClick={() => removeSet(i)} style={{ padding: '0.3rem 0.6rem' }}>✕</button>
               )}
             </div>
           ))}
           {sets.length < 3 && (
-            <button type="button" onClick={addSet}>+ Ajouter un set</button>
+            <button type="button" onClick={addSet} style={{ marginTop: '0.5rem' }}>+ Ajouter un set</button>
           )}
         </div>
 
-        <div className="result-section">
-          <h3>Résultat</h3>
+        <div className="form-section">
+          <h3>Résultat final</h3>
           <div className="result-options">
             {(['teamA', 'draw', 'teamB'] as const).map((w) => (
               <label key={w} className={`result-btn ${winner === w ? 'active' : ''}`}>

@@ -17,17 +17,18 @@ export default function Register() {
       await register(username, email, password);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erreur lors de l\'inscription');
+      setError(err.response?.data?.message || "Erreur lors de l'inscription");
     }
   }
 
   return (
     <div className="auth-page">
       <h1>Inscription</h1>
-      <form onSubmit={submit} className="auth-form">
+      <p className="auth-subtitle">Rejoignez le classement de votre groupe</p>
+      <form onSubmit={submit} className="auth-card">
         <input placeholder="Pseudo" value={username} onChange={(e) => setUsername(e.target.value)} required />
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+        <input type="password" placeholder="Mot de passe (6 caractères min.)" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
         {error && <p className="error">{error}</p>}
         <button type="submit" className="btn-primary">Créer mon compte</button>
       </form>

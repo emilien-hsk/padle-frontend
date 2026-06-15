@@ -3,6 +3,14 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import { Player, PlayerStats, BADGE_LABELS } from '../types';
 
+const AVATAR_COLORS = ['av-0', 'av-1', 'av-2', 'av-3', 'av-4', 'av-5'];
+
+function avatarColor(name: string) {
+  let hash = 0;
+  for (const c of name) hash += c.charCodeAt(0);
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
 export default function Profile() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<{ player: Player; stats: PlayerStats } | null>(null);
@@ -11,36 +19,38 @@ export default function Profile() {
     api.get(`/players/${id}`).then((r) => setData(r.data));
   }, [id]);
 
-  if (!data) return <div className="page">Chargement...</div>;
+  if (!data) return <div className="page" style={{ color: 'var(--text-muted)' }}>Chargement...</div>;
 
   const { player, stats } = data;
 
   return (
     <div className="page">
-      <div className="profile-header">
-        <div className="avatar">{player.username[0].toUpperCase()}</div>
+      <div className="profile-hero">
+        <div className={`avatar-lg ${avatarColor(player.username)}`}>
+          {player.username[0].toUpperCase()}
+        </div>
         <div>
-          <h1>{player.username}</h1>
-          {!player.isRegistered && <span className="badge-guest">Invité</span>}
+          <div className="profile-name">{player.username}</div>
+          {!player.isRegistered && <div className="badge-guest">Invité</div>}
+        </div>
+        <div className="elo-display">
+          <div className="elo-value">{player.elo}</div>
+          <div className="elo-label">ELO</div>
         </div>
       </div>
 
       <div className="stats-grid">
         <div className="stat-card">
-          <span className="stat-value">{player.elo}</span>
-          <span className="stat-label">ELO</span>
+          <div className="stat-value" style={{ color: 'var(--accent2)' }}>{stats.wins}</div>
+          <div className="stat-label">Victoires</div>
         </div>
         <div className="stat-card">
-          <span className="stat-value">{stats.winRate}%</span>
-          <span className="stat-label">Victoires</span>
+          <div className="stat-value">{stats.total}</div>
+          <div className="stat-label">Matchs</div>
         </div>
         <div className="stat-card">
-          <span className="stat-value">{stats.total}</span>
-          <span className="stat-label">Matchs</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-value">{stats.wins}V {stats.losses}D {stats.draws}N</span>
-          <span className="stat-label">Bilan</span>
+          <div className="stat-value">{stats.winRate}%</div>
+          <div className="stat-label">Win rate</div>
         </div>
       </div>
 
@@ -60,7 +70,7 @@ export default function Profile() {
 
       {player.badges.length > 0 && (
         <div className="badges-section">
-          <h3>Badges</h3>
+          <h3>Badges obtenus</h3>
           <div className="badges-list">
             {player.badges.map((b) => (
               <div key={b} className="badge-item">

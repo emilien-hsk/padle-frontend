@@ -23,7 +23,8 @@ export default function Login() {
   return (
     <div className="auth-page">
       <h1>Connexion</h1>
-      <form onSubmit={submit} className="auth-form">
+      <p className="auth-subtitle">Retrouvez vos stats et votre classement</p>
+      <form onSubmit={submit} className="auth-card">
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required />
         {error && <p className="error">{error}</p>}

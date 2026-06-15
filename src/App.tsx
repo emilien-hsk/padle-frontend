@@ -18,7 +18,7 @@ function Layout() {
   return (
     <>
       <header className="app-header">
-        <span className="logo">🎾 Padle</span>
+        <span className="logo">Padle<span>.</span></span>
         <nav>
           <NavLink to="/">Classement</NavLink>
           <NavLink to="/matches">Matchs</NavLink>
