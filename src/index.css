@@ -43,14 +43,7 @@ body {
   z-index: 100;
 }
 
-.logo {
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: var(--text);
-}
-
-.logo span { color: var(--accent); }
+.logo-img { height: 36px; width: auto; object-fit: contain; }
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {

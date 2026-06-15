@@ -63,7 +63,7 @@ function Layout() {
   return (
     <>
       <header className="app-header">
-        <span className="logo">Padle<span>.</span></span>
+        <img src="/logo.png" alt="PadleCourt" className="logo-img" />
       </header>
       <main>
         <Routes>
