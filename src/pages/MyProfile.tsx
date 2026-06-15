@@ -117,7 +117,7 @@ export default function MyProfile() {
         <h3>Badges</h3>
         <div className="badges-list">
           {Object.entries(BADGE_LABELS).map(([key, badge]) => {
-            const obtained = player.badges.includes(key);
+            const obtained = (player.badges ?? []).includes(key);
             return (
               <div key={key} className={`badge-item ${obtained ? '' : 'badge-locked'}`}>
                 <span className="badge-emoji">{badge.emoji}</span>
