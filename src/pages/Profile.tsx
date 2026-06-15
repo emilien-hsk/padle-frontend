@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
-import { Player, PlayerStats, BADGE_LABELS } from '../types';
+import { Player, PlayerStats, PlayerMatch, BADGE_LABELS } from '../types';
+import PlayerHistory from '../components/PlayerHistory';
 
 const AVATAR_COLORS = ['av-0', 'av-1', 'av-2', 'av-3', 'av-4', 'av-5'];
 
@@ -13,7 +14,7 @@ function avatarColor(name: string) {
 
 export default function Profile() {
   const { id } = useParams<{ id: string }>();
-  const [data, setData] = useState<{ player: Player; stats: PlayerStats } | null>(null);
+  const [data, setData] = useState<{ player: Player; stats: PlayerStats; history: PlayerMatch[] } | null>(null);
 
   useEffect(() => {
     api.get(`/players/${id}`).then((r) => setData(r.data));
@@ -21,7 +22,7 @@ export default function Profile() {
 
   if (!data) return <div className="page" style={{ color: 'var(--text-muted)' }}>Chargement...</div>;
 
-  const { player, stats } = data;
+  const { player, stats, history } = data;
 
   return (
     <div className="page">
@@ -77,6 +78,8 @@ export default function Profile() {
           <p><strong>{stats.nemesis.name}</strong> — {stats.nemesis.lossRate}% de défaites contre lui</p>
         </div>
       )}
+
+      <PlayerHistory history={history} playerId={player._id} />
 
       <div className="badges-section">
         <h3>Badges</h3>

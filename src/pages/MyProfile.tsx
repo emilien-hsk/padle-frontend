@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import { PlayerStats, BADGE_LABELS } from '../types';
+import { PlayerStats, PlayerMatch, BADGE_LABELS } from '../types';
+import PlayerHistory from '../components/PlayerHistory';
 
 const AVATAR_COLORS = ['av-0', 'av-1', 'av-2', 'av-3', 'av-4', 'av-5'];
 function avatarColor(name: string) {
@@ -15,10 +16,14 @@ export default function MyProfile() {
   const { player, logout, loading } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState<PlayerStats | null>(null);
+  const [history, setHistory] = useState<PlayerMatch[]>([]);
 
   useEffect(() => {
     if (player) {
-      api.get(`/players/${player._id}`).then((r) => setStats(r.data.stats));
+      api.get(`/players/${player._id}`).then((r) => {
+        setStats(r.data.stats);
+        setHistory(r.data.history ?? []);
+      });
     }
   }, [player]);
 
@@ -105,6 +110,8 @@ export default function MyProfile() {
           <p><strong>{stats.nemesis.name}</strong> — {stats.nemesis.lossRate}% de défaites contre lui</p>
         </div>
       )}
+
+      <PlayerHistory history={history} playerId={player._id} />
 
       <div className="badges-section">
         <h3>Badges</h3>

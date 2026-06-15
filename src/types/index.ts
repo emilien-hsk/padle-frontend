@@ -16,6 +16,10 @@ export interface SetScore {
   isComplete: boolean;
 }
 
+export interface PlayerMatch extends Match {
+  result: 'win' | 'loss' | 'draw';
+}
+
 export interface EloChange {
   playerId: string;
   delta: number;
