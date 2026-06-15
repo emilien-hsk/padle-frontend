@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -8,18 +8,23 @@ export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Étape 1 : inscription
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [step, setStep] = useState<'form' | 'claim'>('form');
 
-  // Étape 2 : claim profil invité
-  const [search, setSearch] = useState('');
   const [guests, setGuests] = useState<Player[]>([]);
   const [claiming, setClaiming] = useState<string | null>(null);
-  const [claimDone, setClaimDone] = useState(false);
+  const [claimedId, setClaimedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (step === 'claim') {
+      api.get<Player[]>('/players').then((r) =>
+        setGuests(r.data.filter((p) => !p.isRegistered))
+      );
+    }
+  }, [step]);
 
   async function submitRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -32,17 +37,12 @@ export default function Register() {
     }
   }
 
-  async function searchGuests() {
-    if (!search.trim()) return;
-    const { data } = await api.get<Player[]>('/players');
-    setGuests(data.filter((p) => !p.isRegistered && p.username.toLowerCase().includes(search.toLowerCase())));
-  }
-
   async function claimProfile(guestId: string) {
     setClaiming(guestId);
+    setError('');
     try {
       await api.post(`/players/${guestId}/claim`);
-      setClaimDone(true);
+      setClaimedId(guestId);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur lors de la demande');
     } finally {
@@ -52,75 +52,68 @@ export default function Register() {
 
   if (step === 'claim') {
     return (
-      <div className="auth-page" style={{ maxWidth: 440 }}>
+      <div className="auth-page" style={{ maxWidth: 460 }}>
         <h1>Bienvenue !</h1>
-        <p className="auth-subtitle">Avez-vous déjà joué en tant qu'invité ?</p>
+        <p className="auth-subtitle">
+          Avez-vous déjà joué en tant qu'invité ? Sélectionnez votre profil pour fusionner vos points ELO.
+        </p>
 
-        {claimDone ? (
-          <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>✅</div>
-            <p style={{ color: 'var(--text)', fontWeight: 600, marginBottom: '0.5rem' }}>
-              Demande envoyée !
+        <div className="auth-card" style={{ gap: '0.5rem' }}>
+          {guests.length === 0 && (
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '0.5rem 0' }}>
+              Aucun profil invité existant.
             </p>
-            <p className="auth-subtitle" style={{ marginBottom: '1.5rem' }}>
-              Un joueur ayant partagé un match avec ce profil devra valider la fusion.
-            </p>
-            <button className="btn-primary" onClick={() => navigate('/')}>
-              Accéder au classement
-            </button>
-          </div>
-        ) : (
-          <div className="auth-card">
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-sub)', marginBottom: '0.25rem' }}>
-              Si vous avez joué avant de créer votre compte, retrouvez votre profil invité pour fusionner vos points ELO et statistiques.
-            </p>
+          )}
 
-            <div className="guest-section">
-              <input
-                placeholder="Rechercher votre nom d'invité..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), searchGuests())}
-              />
-              <button type="button" onClick={searchGuests}>Chercher</button>
-            </div>
+          {guests.map((g) => {
+            const isClaimed = claimedId === g._id;
+            return (
+              <div key={g._id} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                background: isClaimed ? 'rgba(200,241,53,0.06)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${isClaimed ? 'rgba(200,241,53,0.3)' : 'var(--border)'}`,
+                borderRadius: 10, padding: '0.7rem 1rem',
+              }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{g.username}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{g.elo} ELO · Invité</div>
+                </div>
 
-            {error && <p className="error">{error}</p>}
-
-            {guests.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {guests.map((g) => (
-                  <div key={g._id} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)',
-                    borderRadius: 10, padding: '0.65rem 1rem',
-                  }}>
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{g.username}</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{g.elo} ELO · Invité</div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => claimProfile(g._id)}
-                      disabled={claiming === g._id}
-                      style={{ background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid rgba(200,241,53,0.3)', borderRadius: 8, padding: '0.4rem 0.75rem', fontSize: '0.8rem', fontWeight: 600 }}
-                    >
-                      {claiming === g._id ? '...' : 'Réclamer'}
-                    </button>
-                  </div>
-                ))}
+                {isClaimed ? (
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent)' }}>
+                    ✓ Demande envoyée
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => claimProfile(g._id)}
+                    disabled={claiming === g._id || claimedId !== null}
+                    style={{
+                      background: 'var(--accent-dim)', color: 'var(--accent)',
+                      border: '1px solid rgba(200,241,53,0.3)', borderRadius: 8,
+                      padding: '0.4rem 0.85rem', fontSize: '0.8rem', fontWeight: 600,
+                      opacity: claimedId !== null ? 0.4 : 1,
+                    }}
+                  >
+                    {claiming === g._id ? '...' : 'C\'est moi'}
+                  </button>
+                )}
               </div>
-            )}
+            );
+          })}
 
-            {guests.length === 0 && search && (
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Aucun profil invité trouvé pour "{search}".</p>
-            )}
+          {error && <p className="error">{error}</p>}
 
-            <button type="button" onClick={() => navigate('/')} style={{ width: '100%', textAlign: 'center', marginTop: '0.25rem' }}>
-              Ignorer, continuer sans fusionner
-            </button>
-          </div>
-        )}
+          {claimedId && (
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '0.25rem' }}>
+              Un joueur ayant partagé un match avec ce profil pourra valider la fusion depuis son profil.
+            </div>
+          )}
+        </div>
+
+        <button className="btn-primary" onClick={() => navigate('/')} style={{ marginTop: '0.75rem' }}>
+          {claimedId ? 'Accéder au classement' : 'Ignorer, continuer sans fusionner'}
+        </button>
       </div>
     );
   }

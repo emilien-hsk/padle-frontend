@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { Player, BADGE_LABELS } from '../types';
+import PendingClaims from '../components/PendingClaims';
 
 const AVATAR_COLORS = ['av-0', 'av-1', 'av-2', 'av-3', 'av-4', 'av-5'];
 
@@ -21,6 +22,8 @@ export default function Leaderboard() {
 
   return (
     <div className="page">
+      <PendingClaims />
+
       <div className="leaderboard-header">
         <h1>Classement</h1>
         <span className="season-badge">Saison 2026</span>
