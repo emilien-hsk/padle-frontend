@@ -33,10 +33,9 @@ body {
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 1.5rem;
-  height: 60px;
-  background: rgba(10, 10, 10, 0.85);
+  height: 54px;
+  background: rgba(10, 10, 10, 0.9);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   position: sticky;
@@ -45,54 +44,90 @@ body {
 }
 
 .logo {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   color: var(--text);
 }
 
-.logo span {
+.logo span { color: var(--accent); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.4rem 1rem;
+  border-radius: 12px;
+  transition: color 0.15s;
+  min-width: 56px;
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+}
+
+.nav-item span {
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.nav-item.active {
   color: var(--accent);
 }
 
-nav {
+.nav-item.nav-add {
+  padding: 0;
+}
+
+.add-btn {
+  width: 48px;
+  height: 48px;
+  background: var(--accent);
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
+  transition: opacity 0.15s;
 }
 
-nav a {
-  color: var(--text-muted);
-  text-decoration: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.15s;
+.add-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: #0a0a0a;
 }
 
-nav a:hover { color: var(--text); background: var(--surface); }
-nav a.active { color: var(--text); background: var(--surface); }
-
-.btn-logout {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  transition: all 0.15s;
-  font-family: inherit;
+.nav-item.nav-add.active .add-btn,
+.nav-item.nav-add:hover .add-btn {
+  opacity: 0.85;
 }
-.btn-logout:hover { color: var(--danger); background: var(--danger-dim); }
 
 /* ── LAYOUT ── */
 .page {
   max-width: 680px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 5.5rem;
 }
 
 h1 {
