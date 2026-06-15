@@ -5,6 +5,8 @@ export interface Player {
   isRegistered: boolean;
   elo: number;
   badges: string[];
+  currentStreak: number;
+  bestStreak: number;
   createdAt: string;
 }
 
@@ -43,6 +45,6 @@ export interface PlayerStats {
 
 export const BADGE_LABELS: Record<string, { name: string; emoji: string; desc: string }> = {
   mercenaire: { name: 'Le Mercenaire', emoji: '⚔️', desc: 'Gagner avec 5 partenaires différents' },
-  fidele:     { name: 'Le Fidèle',     emoji: '🤝', desc: '10 matchs consécutifs avec le même partenaire' },
-  remontada:  { name: 'La Remontada',  emoji: '🔥', desc: 'Gagner en 3 sets après un 6-0 au premier' },
+  fidele:     { name: 'Le Fidèle',     emoji: '🤝', desc: '5 matchs consécutifs avec le même partenaire' },
+  remontada:  { name: 'La Remontada',  emoji: '🔥', desc: 'Gagner un match après avoir subi un 6-0 au premier set' },
 };

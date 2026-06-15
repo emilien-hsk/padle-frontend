@@ -52,6 +52,16 @@ export default function Profile() {
           <div className="stat-value">{stats.winRate}%</div>
           <div className="stat-label">Win rate</div>
         </div>
+        <div className="stat-card">
+          <div className="stat-value">
+            {player.currentStreak > 0 ? <>🔥{player.currentStreak}</> : '—'}
+          </div>
+          <div className="stat-label">Série actuelle</div>
+        </div>
+        <div className="stat-card" style={{ gridColumn: 'span 2' }}>
+          <div className="stat-value">🏆 {player.bestStreak || 0}</div>
+          <div className="stat-label">Meilleure série</div>
+        </div>
       </div>
 
       {stats.bestPartner && (

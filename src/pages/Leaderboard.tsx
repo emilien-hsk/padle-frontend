@@ -46,7 +46,12 @@ export default function Leaderboard() {
                 {p.username[0].toUpperCase()}
               </div>
               <div>
-                <div className="player-name">{p.username}</div>
+                <div className="player-name">
+                  {p.username}
+                  {p.currentStreak > 0 && (
+                    <span className="streak-badge">🔥{p.currentStreak}</span>
+                  )}
+                </div>
                 {!p.isRegistered && <div className="player-sub">Invité</div>}
               </div>
             </Link>

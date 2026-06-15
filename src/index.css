@@ -242,7 +242,17 @@ h3 {
   flex-shrink: 0;
 }
 
-.player-name { font-size: 0.9rem; font-weight: 600; }
+.player-name { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
+
+.streak-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(251,146,60,0.15);
+  border: 1px solid rgba(251,146,60,0.3);
+  color: #fb923c;
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+}
 .player-sub { font-size: 0.72rem; color: var(--text-muted); }
 
 .elo-cell {
