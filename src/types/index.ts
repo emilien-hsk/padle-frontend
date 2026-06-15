@@ -3,6 +3,7 @@ export interface Player {
   username: string;
   email?: string;
   isRegistered: boolean;
+  isAdmin: boolean;
   elo: number;
   badges: string[];
   currentStreak: number;

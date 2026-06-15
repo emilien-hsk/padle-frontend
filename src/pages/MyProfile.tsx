@@ -132,6 +132,17 @@ export default function MyProfile() {
         </div>
       </div>
 
+      {player.isAdmin && (
+        <Link to="/admin" style={{
+          display: 'block', textAlign: 'center', marginTop: '1rem',
+          padding: '0.75rem', background: 'rgba(96,165,250,0.08)',
+          border: '1px solid rgba(96,165,250,0.25)', borderRadius: 12,
+          color: '#60a5fa', fontWeight: 700, textDecoration: 'none', fontSize: '0.95rem',
+        }}>
+          ⚙️ Panneau admin
+        </Link>
+      )}
+
       <button
         onClick={handleLogout}
         style={{
