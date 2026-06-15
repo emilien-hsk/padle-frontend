@@ -13,7 +13,11 @@ export default function NewMatch() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.get('/players').then((r) => setPlayers(r.data));
+    api.get('/players').then((r) =>
+      setPlayers([...r.data].sort((a: Player, b: Player) =>
+        a.username.localeCompare(b.username, undefined, { sensitivity: 'base' })
+      ))
+    );
   }, []);
 
   async function addGuest() {

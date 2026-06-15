@@ -747,16 +747,15 @@ button[type="button"]:hover {
   background: rgba(251,146,60,0.1) !important;
 }
 
-.set-sides { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0.5rem; }
+.set-sides { display: flex; flex-direction: column; gap: 1rem; }
 
-.set-side { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-.set-side:last-child { align-items: center; }
-.side-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
-.side-score { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; color: var(--text); line-height: 1; }
-.set-divider { font-size: 1.2rem; color: var(--text-muted); padding: 0 0.25rem; margin-top: 1.5rem; }
+.set-side { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; }
+.side-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.side-score { font-size: 3rem; font-weight: 900; letter-spacing: -2px; color: var(--text); line-height: 1; }
+.set-divider { display: none; }
 
 .score-picker {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; width: 100%;
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.35rem; width: 100%;
 }
 
 .score-btn {

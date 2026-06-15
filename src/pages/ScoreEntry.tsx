@@ -129,7 +129,7 @@ export default function ScoreEntry() {
               <ScorePicker value={s.teamA} onChange={(v) => updateSet(i, 'teamA', v)} />
             </div>
 
-            <div className="set-divider">—</div>
+            <div style={{ width: '100%', height: '1px', background: 'var(--border)' }} />
 
             <div className="set-side">
               <div className="side-label">{teamBPlayers[0]?.username ?? 'B'}</div>
