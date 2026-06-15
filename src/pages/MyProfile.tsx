@@ -12,7 +12,7 @@ function avatarColor(name: string) {
 }
 
 export default function MyProfile() {
-  const { player, logout } = useAuth();
+  const { player, logout, loading } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState<PlayerStats | null>(null);
 
@@ -25,6 +25,10 @@ export default function MyProfile() {
   function handleLogout() {
     logout();
     navigate('/');
+  }
+
+  if (loading) {
+    return <div className="page" style={{ color: 'var(--text-muted)', textAlign: 'center', paddingTop: '4rem' }}>Chargement...</div>;
   }
 
   if (!player) {
@@ -92,22 +96,24 @@ export default function MyProfile() {
         </div>
       )}
 
-      {player.badges.length > 0 && (
-        <div className="badges-section">
-          <h3>Badges obtenus</h3>
-          <div className="badges-list">
-            {player.badges.map((b) => (
-              <div key={b} className="badge-item">
-                <span className="badge-emoji">{BADGE_LABELS[b]?.emoji}</span>
+      <div className="badges-section">
+        <h3>Badges</h3>
+        <div className="badges-list">
+          {Object.entries(BADGE_LABELS).map(([key, badge]) => {
+            const obtained = player.badges.includes(key);
+            return (
+              <div key={key} className={`badge-item ${obtained ? '' : 'badge-locked'}`}>
+                <span className="badge-emoji">{badge.emoji}</span>
                 <div>
-                  <div className="badge-name">{BADGE_LABELS[b]?.name}</div>
-                  <div className="badge-desc">{BADGE_LABELS[b]?.desc}</div>
+                  <div className="badge-name">{badge.name}</div>
+                  <div className="badge-desc">{badge.desc}</div>
                 </div>
+                {obtained && <span className="badge-check">✓</span>}
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      )}
+      </div>
 
       <button
         onClick={handleLogout}

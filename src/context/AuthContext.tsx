@@ -5,6 +5,7 @@ import { Player } from '../types';
 interface AuthContextType {
   player: Player | null;
   token: string | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -15,10 +16,14 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [player, setPlayer] = useState<Player | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [loading, setLoading] = useState<boolean>(!!localStorage.getItem('token'));
 
   useEffect(() => {
     if (token) {
-      api.get('/players/me').then((r) => setPlayer(r.data)).catch(() => logout());
+      api.get('/players/me')
+        .then((r) => setPlayer(r.data))
+        .catch(() => logout())
+        .finally(() => setLoading(false));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -41,10 +46,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('token');
     setToken(null);
     setPlayer(null);
+    setLoading(false);
   }
 
   return (
-    <AuthContext.Provider value={{ player, token, login, register, logout }}>
+    <AuthContext.Provider value={{ player, token, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
