@@ -9,13 +9,34 @@ interface SetScore {
   isComplete: boolean;
 }
 
+function computeWinner(sets: SetScore[]): 'teamA' | 'teamB' | 'draw' {
+  let winsA = 0, winsB = 0;
+  for (const s of sets) {
+    if (s.teamA_Score > s.teamB_Score) winsA++;
+    else if (s.teamB_Score > s.teamA_Score) winsB++;
+  }
+  if (winsA > winsB) return 'teamA';
+  if (winsB > winsA) return 'teamB';
+  return 'draw';
+}
+
+function WinnerPreview({ sets }: { sets: SetScore[] }) {
+  const winner = computeWinner(sets);
+  const label = winner === 'teamA' ? 'Équipe A gagne' : winner === 'teamB' ? 'Équipe B gagne' : 'Match nul';
+  const color = winner === 'draw' ? 'var(--text-muted)' : 'var(--accent2)';
+  return (
+    <div style={{ fontSize: '0.82rem', fontWeight: 600, color, marginTop: '0.5rem' }}>
+      Résultat calculé : {label}
+    </div>
+  );
+}
+
 export default function NewMatch() {
   const navigate = useNavigate();
   const [players, setPlayers] = useState<Player[]>([]);
   const [teamA, setTeamA] = useState<[string, string]>(['', '']);
   const [teamB, setTeamB] = useState<[string, string]>(['', '']);
   const [sets, setSets] = useState<SetScore[]>([{ teamA_Score: 0, teamB_Score: 0, isComplete: true }]);
-  const [winner, setWinner] = useState<'teamA' | 'teamB' | 'draw'>('teamA');
   const [guestName, setGuestName] = useState('');
   const [error, setError] = useState('');
 
@@ -48,6 +69,8 @@ export default function NewMatch() {
     const allPlayers = [teamA[0], teamA[1], teamB[0], teamB[1]];
     if (allPlayers.some((p) => !p)) { setError('Sélectionnez 4 joueurs'); return; }
     if (new Set(allPlayers).size !== 4) { setError('Les joueurs doivent être différents'); return; }
+
+    const winner = computeWinner(sets);
     try {
       await api.post('/matches', { teamA, teamB, scores: sets, winner });
       navigate('/');
@@ -94,7 +117,7 @@ export default function NewMatch() {
         </div>
 
         <div className="form-section">
-          <h3>Ajouter un joueur invité</h3>
+          <h3>Ajouter un joueur invité <span style={{ color: 'var(--text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(si pas de compte)</span></h3>
           <div className="guest-section">
             <input
               placeholder="Nom du joueur invité..."
@@ -129,18 +152,7 @@ export default function NewMatch() {
           {sets.length < 3 && (
             <button type="button" onClick={addSet} style={{ marginTop: '0.5rem' }}>+ Ajouter un set</button>
           )}
-        </div>
-
-        <div className="form-section">
-          <h3>Résultat final</h3>
-          <div className="result-options">
-            {(['teamA', 'draw', 'teamB'] as const).map((w) => (
-              <label key={w} className={`result-btn ${winner === w ? 'active' : ''}`}>
-                <input type="radio" name="winner" value={w} checked={winner === w} onChange={() => setWinner(w)} />
-                {w === 'teamA' ? 'Victoire A' : w === 'teamB' ? 'Victoire B' : 'Match Nul'}
-              </label>
-            ))}
-          </div>
+          <WinnerPreview sets={sets} />
         </div>
 
         {error && <p className="error">{error}</p>}

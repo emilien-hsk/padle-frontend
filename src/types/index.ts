@@ -14,6 +14,11 @@ export interface SetScore {
   isComplete: boolean;
 }
 
+export interface EloChange {
+  playerId: string;
+  delta: number;
+}
+
 export interface Match {
   _id: string;
   date: string;
@@ -23,6 +28,7 @@ export interface Match {
   winner: 'teamA' | 'teamB' | 'draw';
   coefficient: 0.5 | 1.0;
   validated: boolean;
+  eloChanges: EloChange[];
 }
 
 export interface PlayerStats {
