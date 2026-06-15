@@ -70,8 +70,7 @@ export default function MatchHistory() {
                 <span className={`result-pill ${m.winner}`}>
                   {m.winner === 'teamA' ? 'Équipe A gagne' : m.winner === 'teamB' ? 'Équipe B gagne' : 'Match nul'}
                 </span>
-                <span className="coef-pill">×{m.coefficient}</span>
-                <span>{new Date(m.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+<span>{new Date(m.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
               </div>
             </div>
           );
