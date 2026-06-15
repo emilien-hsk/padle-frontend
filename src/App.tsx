@@ -4,6 +4,7 @@ import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import MyProfile from './pages/MyProfile';
 import NewMatch from './pages/NewMatch';
+import ScoreEntry from './pages/ScoreEntry';
 import MatchHistory from './pages/MatchHistory';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -73,6 +74,7 @@ function Layout() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/new-match" element={<ProtectedRoute><NewMatch /></ProtectedRoute>} />
+          <Route path="/match/score" element={<ProtectedRoute><ScoreEntry /></ProtectedRoute>} />
         </Routes>
       </main>
       <BottomNav />

@@ -677,6 +677,114 @@ button[type="button"]:hover {
   font-size: 0.9rem;
 }
 
+/* ── TEAM ASSIGN OVERLAY ── */
+.team-assign-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; backdrop-filter: blur(4px);
+}
+
+.team-assign-modal {
+  background: #1a1a1a; border: 1px solid var(--border-light);
+  border-radius: 20px; padding: 1.75rem 1.5rem; text-align: center;
+  width: 300px;
+}
+
+.team-assign-btn {
+  flex: 1; padding: 0.85rem; border-radius: 12px; font-size: 0.95rem;
+  font-weight: 700; cursor: pointer; font-family: inherit;
+  background: var(--surface); border: 1px solid var(--border-light); color: var(--text);
+  transition: all 0.15s;
+}
+
+.team-assign-btn:hover { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+.selected-player {
+  background: rgba(200,241,53,0.08); border: 1px solid rgba(200,241,53,0.25);
+  border-radius: 10px; padding: 0.6rem 0.75rem; font-size: 0.88rem;
+  font-weight: 600; color: var(--accent);
+}
+
+.clear-team {
+  font-size: 0.75rem !important; padding: 0.25rem 0.5rem !important;
+  border-radius: 6px !important; color: var(--text-muted) !important;
+  border-color: var(--border) !important;
+}
+
+/* ── SCORE ENTRY ── */
+.scoreboard {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem;
+}
+
+.scoreboard-team { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
+.scoreboard-team.right { align-items: flex-end; }
+.sb-name { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+.sb-total { font-size: 2.5rem; font-weight: 900; letter-spacing: -2px; color: var(--accent); line-height: 1; }
+.sb-sep { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 0.5rem; }
+
+.set-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.75rem;
+}
+
+.set-card-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;
+}
+
+.set-card-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+
+.interrupted-btn {
+  font-size: 0.72rem !important; padding: 0.25rem 0.65rem !important;
+  border-radius: 20px !important; font-weight: 600 !important;
+  color: var(--text-muted) !important; border-color: var(--border) !important;
+  background: transparent !important;
+}
+
+.interrupted-btn.active {
+  color: #fb923c !important; border-color: rgba(251,146,60,0.4) !important;
+  background: rgba(251,146,60,0.1) !important;
+}
+
+.set-sides { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0.5rem; }
+
+.set-side { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.set-side:last-child { align-items: center; }
+.side-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+.side-score { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; color: var(--text); line-height: 1; }
+.set-divider { font-size: 1.2rem; color: var(--text-muted); padding: 0 0.25rem; margin-top: 1.5rem; }
+
+.score-picker {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; width: 100%;
+}
+
+.score-btn {
+  aspect-ratio: 1; border-radius: 10px; font-size: 1rem; font-weight: 700;
+  border: 1px solid var(--border-light); background: rgba(255,255,255,0.04);
+  color: var(--text-sub); cursor: pointer; font-family: inherit;
+  transition: all 0.12s;
+}
+
+.score-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+.score-btn.active { background: var(--accent); border-color: var(--accent); color: #0a0a0a; }
+
+.winner-preview {
+  text-align: center; font-size: 0.88rem; font-weight: 700;
+  margin: 0.5rem 0 1rem; letter-spacing: 0.01em;
+}
+
+.score-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
+
+.btn-secondary {
+  background: rgba(255,255,255,0.06); color: var(--text-sub);
+  border: 1px solid var(--border-light); border-radius: 12px;
+  padding: 0.85rem; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; font-family: inherit; width: 100%; transition: all 0.15s;
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
