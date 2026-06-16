@@ -108,7 +108,7 @@ function InstallTuto() {
       >i</button>
 
       {open && (
-          <div className="tuto-panel" style={{
+        <div className="tuto-panel" style={{
             position: 'absolute', top: 34, right: 0, zIndex: 300,
             background: '#1c1c1c', border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: 16, padding: '1.25rem', width: 300,
@@ -142,11 +142,11 @@ function InstallTuto() {
               ))}
             </div>
           </div>
-        </div>
       )}
     </div>
   );
 }
+
 
 function Layout() {
   return (
