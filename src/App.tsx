@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
@@ -60,11 +61,79 @@ function BottomNav() {
   );
 }
 
+function InstallTuto() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        style={{
+          marginLeft: 'auto', width: 28, height: 28, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+          color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700,
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'Georgia, serif', fontStyle: 'italic', flexShrink: 0,
+        }}
+      >i</button>
+
+      {open && (
+        <div onClick={() => setOpen(false)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+          zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '1.5rem', backdropFilter: 'blur(6px)',
+        }}>
+          <div onClick={(e) => e.stopPropagation()} style={{
+            background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 20, padding: '1.75rem', width: '100%', maxWidth: 340,
+          }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '1.25rem', textAlign: 'center' }}>
+              📲 Installer l'app
+            </h2>
+
+            <div style={{ marginBottom: '1.25rem' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
+                🍎 iPhone / iPad (Safari)
+              </div>
+              {['Ouvrez le site dans Safari', 'Appuyez sur le bouton Partager (carré ↑)', 'Appuyez sur "Sur l\'écran d\'accueil"', 'Confirmez en appuyant sur "Ajouter"'].map((step, i) => (
+                <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
+                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--accent-dim)', border: '1px solid rgba(200,241,53,0.3)', color: 'var(--accent)', fontSize: '0.7rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-sub)', lineHeight: 1.4 }}>{step}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
+                🤖 Android (Chrome)
+              </div>
+              {['Ouvrez le site dans Chrome', 'Appuyez sur ⋮ (menu en haut à droite)', 'Appuyez sur "Installer l\'application"', 'Confirmez en appuyant sur "Installer"'].map((step, i) => (
+                <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
+                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.3)', color: '#60a5fa', fontSize: '0.7rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-sub)', lineHeight: 1.4 }}>{step}</span>
+                </div>
+              ))}
+            </div>
+
+            <button onClick={() => setOpen(false)} style={{
+              width: '100%', padding: '0.75rem', background: 'var(--accent)',
+              color: '#0a0a0a', border: 'none', borderRadius: 12,
+              fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit',
+            }}>
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function Layout() {
   return (
     <>
       <header className="app-header">
         <img src="/logo.png" alt="PadleCourt" className="logo-img" />
+        <InstallTuto />
       </header>
       <main>
         <Routes>
