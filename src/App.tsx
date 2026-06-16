@@ -63,66 +63,72 @@ function BottomNav() {
 
 function InstallTuto() {
   const [open, setOpen] = useState(false);
+
+  const iosSteps = ['Ouvrez le site dans Safari', 'Appuyez sur le bouton Partager (carré avec flèche vers le haut)', 'Appuyez sur "Sur l\'écran d\'accueil"', 'Confirmez en appuyant sur "Ajouter"'];
+  const androidSteps = ['Ouvrez le site dans Chrome', 'Appuyez sur le menu (3 points en haut à droite)', 'Appuyez sur "Installer l\'application"', 'Confirmez en appuyant sur "Installer"'];
+
   return (
     <>
+      <style>{`
+        @keyframes popFromDot {
+          from { opacity: 0; transform: scale(0.4) translateY(-8px); transform-origin: top right; }
+          to   { opacity: 1; transform: scale(1) translateY(0);      transform-origin: top right; }
+        }
+        .tuto-panel { animation: popFromDot 0.22s cubic-bezier(0.34,1.56,0.64,1) both; }
+      `}</style>
+
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen((v) => !v)}
         style={{
-          marginLeft: 'auto', width: 28, height: 28, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-          color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700,
-          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginLeft: 'auto', width: 26, height: 26, borderRadius: '50%',
+          background: open ? 'rgba(200,241,53,0.15)' : 'rgba(255,255,255,0.08)',
+          border: `1px solid ${open ? 'rgba(200,241,53,0.4)' : 'rgba(255,255,255,0.15)'}`,
+          color: open ? 'var(--accent)' : 'var(--text-muted)',
+          fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontFamily: 'Georgia, serif', fontStyle: 'italic', flexShrink: 0,
+          transition: 'all 0.15s',
         }}
       >i</button>
 
       {open && (
-        <div onClick={() => setOpen(false)} style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
-          zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '1.5rem', backdropFilter: 'blur(6px)',
-        }}>
-          <div onClick={(e) => e.stopPropagation()} style={{
-            background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: 20, padding: '1.75rem', width: '100%', maxWidth: 340,
+        <>
+          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 299 }} />
+          <div className="tuto-panel" style={{
+            position: 'fixed', top: 58, right: 12, zIndex: 300,
+            background: '#1c1c1c', border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 16, padding: '1.25rem', width: 300,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
           }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '1.25rem', textAlign: 'center' }}>
-              📲 Installer l'app
-            </h2>
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text)' }}>
+              Installer l'application
+            </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
-                🍎 iPhone / iPad (Safari)
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                iPhone / iPad — Safari
               </div>
-              {['Ouvrez le site dans Safari', 'Appuyez sur le bouton Partager (carré ↑)', 'Appuyez sur "Sur l\'écran d\'accueil"', 'Confirmez en appuyant sur "Ajouter"'].map((step, i) => (
-                <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
-                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--accent-dim)', border: '1px solid rgba(200,241,53,0.3)', color: 'var(--accent)', fontSize: '0.7rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-sub)', lineHeight: 1.4 }}>{step}</span>
+              {iosSteps.map((step, i) => (
+                <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', marginBottom: '0.35rem' }}>
+                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: 'var(--accent-dim)', border: '1px solid rgba(200,241,53,0.3)', color: 'var(--accent)', fontSize: '0.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{i + 1}</span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-sub)', lineHeight: 1.4 }}>{step}</span>
                 </div>
               ))}
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
-                🤖 Android (Chrome)
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                Android — Chrome
               </div>
-              {['Ouvrez le site dans Chrome', 'Appuyez sur ⋮ (menu en haut à droite)', 'Appuyez sur "Installer l\'application"', 'Confirmez en appuyant sur "Installer"'].map((step, i) => (
-                <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
-                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.3)', color: '#60a5fa', fontSize: '0.7rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-sub)', lineHeight: 1.4 }}>{step}</span>
+              {androidSteps.map((step, i) => (
+                <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', marginBottom: '0.35rem' }}>
+                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.3)', color: '#60a5fa', fontSize: '0.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{i + 1}</span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-sub)', lineHeight: 1.4 }}>{step}</span>
                 </div>
               ))}
             </div>
-
-            <button onClick={() => setOpen(false)} style={{
-              width: '100%', padding: '0.75rem', background: 'var(--accent)',
-              color: '#0a0a0a', border: 'none', borderRadius: 12,
-              fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit',
-            }}>
-              Fermer
-            </button>
           </div>
-        </div>
+        </>
       )}
     </>
   );
