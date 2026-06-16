@@ -93,7 +93,7 @@ function InstallTuto() {
 
       {open && (
         <>
-          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 299 }} />
+          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 299, background: 'rgba(0,0,0,0.01)', WebkitTapHighlightColor: 'transparent' }} />
           <div className="tuto-panel" style={{
             position: 'fixed', top: 58, right: 12, zIndex: 300,
             background: '#1c1c1c', border: '1px solid rgba(255,255,255,0.12)',
