@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
@@ -63,12 +63,28 @@ function BottomNav() {
 
 function InstallTuto() {
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent | TouchEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('touchstart', handleClick);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('touchstart', handleClick);
+    };
+  }, [open]);
 
   const iosSteps = ['Ouvrez le site dans Safari', 'Appuyez sur le bouton Partager (carré avec flèche vers le haut)', 'Appuyez sur "Sur l\'écran d\'accueil"', 'Confirmez en appuyant sur "Ajouter"'];
   const androidSteps = ['Ouvrez le site dans Chrome', 'Appuyez sur le menu (3 points en haut à droite)', 'Appuyez sur "Installer l\'application"', 'Confirmez en appuyant sur "Installer"'];
 
   return (
-    <>
+    <div ref={containerRef} style={{ marginLeft: 'auto', position: 'relative', flexShrink: 0 }}>
       <style>{`
         @keyframes popFromDot {
           from { opacity: 0; transform: scale(0.4) translateY(-8px); transform-origin: top right; }
@@ -80,22 +96,20 @@ function InstallTuto() {
       <button
         onClick={() => setOpen((v) => !v)}
         style={{
-          marginLeft: 'auto', width: 26, height: 26, borderRadius: '50%',
+          width: 26, height: 26, borderRadius: '50%',
           background: open ? 'rgba(200,241,53,0.15)' : 'rgba(255,255,255,0.08)',
           border: `1px solid ${open ? 'rgba(200,241,53,0.4)' : 'rgba(255,255,255,0.15)'}`,
           color: open ? 'var(--accent)' : 'var(--text-muted)',
           fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'Georgia, serif', fontStyle: 'italic', flexShrink: 0,
+          fontFamily: 'Georgia, serif', fontStyle: 'italic',
           transition: 'all 0.15s',
         }}
       >i</button>
 
       {open && (
-        <>
-          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 299, background: 'rgba(0,0,0,0.01)', WebkitTapHighlightColor: 'transparent' }} />
           <div className="tuto-panel" style={{
-            position: 'fixed', top: 58, right: 12, zIndex: 300,
+            position: 'absolute', top: 34, right: 0, zIndex: 300,
             background: '#1c1c1c', border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: 16, padding: '1.25rem', width: 300,
             boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
@@ -128,9 +142,9 @@ function InstallTuto() {
               ))}
             </div>
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 }
 
