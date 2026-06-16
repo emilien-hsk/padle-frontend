@@ -51,14 +51,15 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: calc(64px + env(safe-area-inset-bottom));
   background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-around;
   z-index: 100;
+  padding-top: 10px;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -120,7 +121,7 @@ body {
 .page {
   max-width: 680px;
   margin: 0 auto;
-  padding: 2rem 1rem 5.5rem;
+  padding: 2rem 1rem calc(5.5rem + env(safe-area-inset-bottom));
 }
 
 h1 {
