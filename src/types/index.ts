@@ -48,6 +48,38 @@ export interface PlayerStats {
   nemesis: { id: string; name: string; lossRate: number } | null;
 }
 
+export interface TournamentMatch {
+  teamAIndex: number;
+  teamBIndex: number;
+  status: 'pending' | 'completed';
+  phase: 'pool' | 'final';
+  poolIndex?: number;
+  groupIndex?: number;
+  matchId?: string;
+  match?: Match | null;
+}
+
+export interface Tournament {
+  _id: string;
+  name: string;
+  status: 'pool_stage' | 'playoffs' | 'completed';
+  countForRanking: boolean;
+  teams: { players: Player[] }[];
+  pools: number[][];
+  rankGroups: number[][];
+  matches: TournamentMatch[];
+  createdAt: string;
+}
+
+export interface StandRow {
+  teamIdx: number;
+  pts: number;
+  setsFor: number;
+  setsAgainst: number;
+  gamesFor: number;
+  gamesAgainst: number;
+}
+
 export const BADGE_LABELS: Record<string, { name: string; emoji: string; desc: string }> = {
   mercenaire: { name: 'Le Mercenaire', emoji: '⚔️', desc: 'Gagner avec 5 partenaires différents' },
   fidele:     { name: 'Le Fidèle',     emoji: '🤝', desc: '5 matchs consécutifs avec le même partenaire' },
