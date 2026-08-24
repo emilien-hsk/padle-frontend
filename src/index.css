@@ -835,6 +835,132 @@ button[type="button"]:hover {
 
 .btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
 
+/* ── VIDÉO DE MATCH ── */
+.video-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem 0.2rem 0.45rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(200, 241, 53, 0.3);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.video-pill:hover { background: rgba(200, 241, 53, 0.22); }
+.video-pill svg { width: 12px; height: 12px; }
+
+.video-add,
+.video-remove {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  padding: 0.2rem 0.55rem !important;
+  border-radius: 20px !important;
+  background: transparent !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+.video-add:hover { color: var(--accent) !important; border-color: rgba(200, 241, 53, 0.3) !important; }
+.video-remove:hover { color: var(--danger) !important; border-color: rgba(255, 77, 77, 0.3) !important; }
+
+.video-error { font-size: 0.72rem; color: var(--danger); font-weight: 600; }
+
+.video-form { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; margin-top: 0.25rem; }
+.video-form-actions { display: flex; gap: 0.5rem; }
+.video-form-actions .btn-primary { width: auto; flex: 1; padding: 0.5rem 0.85rem; font-size: 0.82rem; }
+
+.video-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 300;
+}
+
+.video-modal {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Le ratio 16/9 est tenu par le conteneur : l'iframe YouTube n'a pas de
+   hauteur intrinsèque et s'effondrerait à 150px. */
+.video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.video-actions { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+
+.video-actions a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.video-actions a:hover { color: var(--accent); }
+
+/* Confirmation de retrait */
+.confirm-modal { text-align: left; }
+
+.confirm-title {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-sub);
+  margin-bottom: 1.25rem;
+}
+
+.confirm-actions { display: flex; gap: 0.5rem; }
+
+.confirm-actions button {
+  flex: 1;
+  padding: 0.65rem !important;
+  border-radius: 10px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+}
+
+.confirm-actions .confirm-danger {
+  background: var(--danger-dim) !important;
+  border-color: rgba(255, 77, 77, 0.3) !important;
+  color: var(--danger) !important;
+}
+
+.confirm-actions .confirm-danger:hover:not(:disabled) {
+  background: rgba(255, 77, 77, 0.22) !important;
+}
+
+.confirm-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { Match } from '../types';
+import MatchVideo from '../components/MatchVideo';
 
 function EloDelta({ delta }: { delta: number }) {
   if (delta === 0) return null;
@@ -26,6 +27,12 @@ export default function MatchHistory() {
   useEffect(() => {
     api.get('/matches').then((r) => setMatches(r.data));
   }, []);
+
+  // Le back renvoie le match complet après ajout/retrait : on remplace la
+  // ligne concernée plutôt que de recharger tout l'historique.
+  function replaceMatch(updated: Match) {
+    setMatches((prev) => prev.map((m) => (m._id === updated._id ? updated : m)));
+  }
 
   function getTeamDelta(match: Match, teamPlayers: Match['teamA']): number | null {
     if (!match.eloChanges?.length) return null;
@@ -70,7 +77,8 @@ export default function MatchHistory() {
                 <span className={`result-pill ${m.winner}`}>
                   {m.winner === 'teamA' ? 'Équipe A gagne' : m.winner === 'teamB' ? 'Équipe B gagne' : 'Match nul'}
                 </span>
-<span>{new Date(m.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+                <span>{new Date(m.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+                <MatchVideo match={m} onChange={replaceMatch} />
               </div>
             </div>
           );

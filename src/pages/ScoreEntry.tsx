@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import { Player } from '../types';
+import { parseYouTubeId } from '../utils/youtube';
 
 interface SetScore { teamA: number; teamB: number; isComplete: boolean; }
 
@@ -43,6 +44,7 @@ export default function ScoreEntry() {
   const [sets, setSets] = useState<SetScore[]>([{ teamA: 0, teamB: 0, isComplete: true }]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
 
   useEffect(() => {
     if (!teamAIds || !teamBIds) { navigate('/new-match'); return; }
@@ -73,7 +75,7 @@ export default function ScoreEntry() {
     const winner = computeWinner(sets);
     const scores = sets.map((s) => ({ teamA_Score: s.teamA, teamB_Score: s.teamB, isComplete: s.isComplete }));
     try {
-      await api.post('/matches', { teamA: teamAIds, teamB: teamBIds, scores, winner });
+      await api.post('/matches', { teamA: teamAIds, teamB: teamBIds, scores, winner, videoUrl });
       navigate('/matches');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur');
@@ -145,6 +147,21 @@ export default function ScoreEntry() {
         {winnerLabel}
       </div>
 
+      {/* Vidéo — facultative, ajoutable aussi après coup depuis l'historique */}
+      <div className="form-section" style={{ marginBottom: '0.75rem' }}>
+        <h3>Vidéo du match (facultatif)</h3>
+        <input
+          placeholder="Coller le lien YouTube…"
+          value={videoUrl}
+          onChange={(e) => setVideoUrl(e.target.value)}
+        />
+        {videoUrl.trim() && !parseYouTubeId(videoUrl) && (
+          <p className="video-error" style={{ marginTop: '0.4rem' }}>
+            Ce lien n'est pas une vidéo YouTube.
+          </p>
+        )}
+      </div>
+
       {error && <p className="error">{error}</p>}
 
       {/* Actions */}
@@ -158,7 +175,7 @@ export default function ScoreEntry() {
           type="button"
           className="btn-primary"
           onClick={finish}
-          disabled={submitting}
+          disabled={submitting || (videoUrl.trim() !== '' && !parseYouTubeId(videoUrl))}
         >
           {submitting ? 'Enregistrement...' : 'Terminer le match'}
         </button>

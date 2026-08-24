@@ -26,6 +26,12 @@ export interface EloChange {
   delta: number;
 }
 
+export interface MatchVideo {
+  videoId: string;
+  addedBy: string;
+  addedAt: string;
+}
+
 export interface Match {
   _id: string;
   date: string;
@@ -36,6 +42,7 @@ export interface Match {
   coefficient: 0.5 | 1.0;
   validated: boolean;
   eloChanges: EloChange[];
+  video?: MatchVideo | null;
 }
 
 export interface PlayerStats {
