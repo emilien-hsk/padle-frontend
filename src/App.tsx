@@ -18,6 +18,7 @@ import ChannelChat from './pages/ChannelChat';
 import NotificationBell from './components/NotificationBell';
 import BottomNav from './components/BottomNav';
 import HeaderAvatar from './components/HeaderAvatar';
+import InstallPrompt from './components/InstallPrompt';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -154,6 +155,7 @@ function Layout() {
         </Routes>
       </main>
       <BottomNav />
+      <InstallPrompt />
     </>
   );
 }
