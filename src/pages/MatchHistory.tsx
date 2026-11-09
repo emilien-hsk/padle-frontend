@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import CompetTabs from '../components/CompetTabs';
 import { Match } from '../types';
 import MatchVideo from '../components/MatchVideo';
 
@@ -43,6 +44,7 @@ export default function MatchHistory() {
 
   return (
     <div className="page">
+      <CompetTabs />
       <h1>Historique des matchs</h1>
       <div className="match-list">
         {matches.map((m) => {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import CompetTabs from '../components/CompetTabs';
 import { Player, BADGE_LABELS } from '../types';
 import PendingClaims from '../components/PendingClaims';
 
@@ -22,6 +23,7 @@ export default function Leaderboard() {
 
   return (
     <div className="page">
+      <CompetTabs />
       <PendingClaims />
 
       <div className="leaderboard-header">

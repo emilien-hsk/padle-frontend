@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
-import { Player } from '../types';
+import { Player, ScorePromptRef } from '../types';
 import { parseYouTubeId } from '../utils/youtube';
 
 interface SetScore { teamA: number; teamB: number; isComplete: boolean; }
@@ -37,7 +37,11 @@ function ScorePicker({ value, onChange }: { value: number; onChange: (v: number)
 export default function ScoreEntry() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { teamA: teamAIds, teamB: teamBIds } = (location.state || {}) as { teamA: string[]; teamB: string[] };
+  const { teamA: teamAIds, teamB: teamBIds, scorePrompt } = (location.state || {}) as {
+    teamA: string[];
+    teamB: string[];
+    scorePrompt?: ScorePromptRef;
+  };
 
   const [teamAPlayers, setTeamAPlayers] = useState<Player[]>([]);
   const [teamBPlayers, setTeamBPlayers] = useState<Player[]>([]);
@@ -75,8 +79,15 @@ export default function ScoreEntry() {
     const winner = computeWinner(sets);
     const scores = sets.map((s) => ({ teamA_Score: s.teamA, teamB_Score: s.teamB, isComplete: s.isComplete }));
     try {
-      await api.post('/matches', { teamA: teamAIds, teamB: teamBIds, scores, winner, videoUrl });
-      navigate('/matches');
+      await api.post('/matches', {
+        teamA: teamAIds,
+        teamB: teamBIds,
+        scores,
+        winner,
+        videoUrl,
+        scorePrompt: scorePrompt ? { channelId: scorePrompt.channelId, messageId: scorePrompt.messageId } : undefined,
+      });
+      navigate(scorePrompt ? `/channels/${scorePrompt.channelId}` : '/matches');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur');
       setSubmitting(false);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import CompetTabs from '../components/CompetTabs';
 import { Tournament } from '../types';
 import { useAuth } from '../context/AuthContext';
 
@@ -12,7 +13,7 @@ const STATUS_LABEL = {
 
 export default function Tournaments() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  const { token } = useAuth();
+  const { player } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,9 +22,10 @@ export default function Tournaments() {
 
   return (
     <div className="page">
+      <CompetTabs />
       <div className="leaderboard-header">
         <h1>Tournois</h1>
-        {token && (
+        {player?.isAdmin && (
           <button
             type="button"
             onClick={() => navigate('/tournaments/new')}

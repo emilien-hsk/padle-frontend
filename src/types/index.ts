@@ -92,3 +92,143 @@ export const BADGE_LABELS: Record<string, { name: string; emoji: string; desc: s
   fidele:     { name: 'Le Fidèle',     emoji: '🤝', desc: '5 matchs consécutifs avec le même partenaire' },
   remontada:  { name: 'La Remontada',  emoji: '🔥', desc: 'Gagner un match après avoir subi un 6-0 au premier set' },
 };
+
+// ── Réservation (Playtomic) ──
+export type CourtType = 'indoor' | 'covered' | 'outdoor';
+
+export interface CourtSlot {
+  start: string; // ISO UTC
+  time: string; // "HH:MM" heure locale
+  duration: number;
+  price: number | null;
+  priceLabel: string;
+  bookingUrl: string;
+}
+
+export interface CourtAvailability {
+  id: string;
+  name: string;
+  number: number;
+  type: CourtType;
+  slots: CourtSlot[];
+}
+
+export interface DayAvailability {
+  date: string;
+  clubUrl: string;
+  fetchedAt: string;
+  courts: CourtAvailability[];
+}
+
+export interface BookingClub {
+  name: string;
+  address: string;
+  url: string;
+  maxDaysAhead: number;
+}
+
+// ── Disponibilités & notifications ──
+export interface PlayerLite {
+  _id: string;
+  username: string;
+  elo: number;
+}
+
+export interface Availability {
+  _id: string;
+  player: PlayerLite;
+  start: string;
+  end: string;
+}
+
+export interface AvailabilityMatch {
+  availabilityId: string;
+  player: PlayerLite;
+  start: string;
+  end: string;
+}
+
+export interface MyAvailability {
+  _id: string;
+  channelId: string | null;
+  start: string;
+  end: string;
+  matches: AvailabilityMatch[];
+}
+
+export interface AppNotification {
+  _id: string;
+  type: 'availability_match';
+  title: string;
+  body: string;
+  url: string;
+  read: boolean;
+  createdAt: string;
+}
+
+// ── Canaux de discussion ──
+export interface ChatProposal {
+  start: string;
+  duration: number;
+  courtId?: string;
+  courtNumber?: number;
+  courtName?: string;
+  bookingUrl?: string;
+  votes: string[];
+  status: 'open' | 'confirmed';
+}
+
+export interface ChatScorePrompt {
+  proposal: string;
+  start: string;
+  duration: number;
+  courtNumber?: number;
+  status: 'pending' | 'recorded' | 'dismissed';
+  matchId?: string;
+  doneBy?: { _id: string; username: string };
+}
+
+/** Infos transmises de la discussion vers la saisie du score. */
+export interface ScorePromptRef {
+  channelId: string;
+  messageId: string;
+  label: string;
+  members: PlayerLite[];
+}
+
+export interface ChatMessage {
+  _id: string;
+  author?: { _id: string; username: string };
+  kind: 'text' | 'system' | 'proposal' | 'score_prompt';
+  text: string;
+  proposal?: ChatProposal;
+  scorePrompt?: ChatScorePrompt;
+  createdAt: string;
+}
+
+export interface ChannelSummary {
+  _id: string;
+  start: string;
+  end: string;
+  members: PlayerLite[];
+  unread: number;
+  nextMatch: NextMatch | null;
+  lastMessage: { text: string; author?: { username: string }; createdAt: string } | null;
+}
+
+export interface ChannelDetail {
+  _id: string;
+  start: string;
+  end: string;
+  expiresAt: string;
+  members: PlayerLite[];
+  messages: ChatMessage[];
+}
+
+export interface NextMatch {
+  start: string;
+  duration: number;
+  courtNumber?: number;
+  courtName?: string;
+  bookingUrl?: string;
+}

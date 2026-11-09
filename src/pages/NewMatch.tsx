@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { Player } from '../types';
+import { Player, ScorePromptRef } from '../types';
 
 export default function NewMatch() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const scorePrompt = (location.state as { scorePrompt?: ScorePromptRef } | null)?.scorePrompt;
   const [players, setPlayers] = useState<Player[]>([]);
   const [teamA, setTeamA] = useState<[string, string]>(['', '']);
   const [teamB, setTeamB] = useState<[string, string]>(['', '']);
@@ -46,7 +48,21 @@ export default function NewMatch() {
     const all = [teamA[0], teamA[1], teamB[0], teamB[1]];
     if (all.some((p) => !p)) { setError('Sélectionnez 4 joueurs'); return; }
     if (new Set(all).size !== 4) { setError('Les joueurs doivent être différents'); return; }
-    navigate('/match/score', { state: { teamA, teamB } });
+    navigate('/match/score', { state: { teamA, teamB, scorePrompt } });
+  }
+
+  // Place un joueur de la discussion dans l'équipe A ou B (re-cliquer le retire)
+  function assign(id: string, team: 'A' | 'B') {
+    const was = teamA.includes(id) ? 'A' : teamB.includes(id) ? 'B' : null;
+    const strip = (t: [string, string]) => t.filter((x) => x && x !== id);
+    let a = strip(teamA);
+    let b = strip(teamB);
+    if (was !== team) {
+      if (team === 'A') a = a.length >= 2 ? [a[0], id] : [...a, id];
+      else b = b.length >= 2 ? [b[0], id] : [...b, id];
+    }
+    setTeamA([a[0] ?? '', a[1] ?? '']);
+    setTeamB([b[0] ?? '', b[1] ?? '']);
   }
 
   function playerName(id: string) {
@@ -59,7 +75,28 @@ export default function NewMatch() {
 
   return (
     <div className="page">
-      <h1>Nouveau match</h1>
+      <h1>{scorePrompt ? 'Score de la partie' : 'Nouveau match'}</h1>
+
+      {scorePrompt && (
+        <div className="from-channel">
+          <div className="from-channel-label">Partie du {scorePrompt.label}</div>
+          <p>Choisis qui jouait avec qui. Complète en dessous si un joueur n'était pas dans la discussion.</p>
+          <div className="assign-list">
+            {scorePrompt.members.map((m) => {
+              const t = teamA.includes(m._id) ? 'A' : teamB.includes(m._id) ? 'B' : null;
+              return (
+                <div key={m._id} className="assign-row">
+                  <span className="assign-name">{m.username}</span>
+                  <div className="assign-toggle">
+                    <button type="button" className={t === 'A' ? 'on' : ''} onClick={() => assign(m._id, 'A')}>Équipe A</button>
+                    <button type="button" className={t === 'B' ? 'on' : ''} onClick={() => assign(m._id, 'B')}>Équipe B</button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Popup assignation équipe */}
       {pendingGuest && (
@@ -146,7 +183,7 @@ export default function NewMatch() {
         </div>
 
         {error && <p className="error">{error}</p>}
-        <button type="submit" className="btn-primary">Commencer le match →</button>
+        <button type="submit" className="btn-primary">{scorePrompt ? 'Saisir le score →' : 'Commencer le match →'}</button>
       </form>
     </div>
   );
